@@ -80,8 +80,7 @@ path(Prefix, Suffix) ->
 send(Client, #req{method = Method, opts = Opts, body = Body} = Req) ->
     ConnectOpts = proplists:get_value(connect_opts, Opts, []),
     Url = url(Client, Req),
-    io:format("body ~p~n",[erlastic_lib:to_json(Body)]),
-    Res = hackney:request(Method, Url, [], erlastic_lib:to_json(Body), ConnectOpts),
+    Res = hackney:request(Method, Url, [], encode_body(Body), ConnectOpts),
     case Res of
         {ok, Status, _, Ref} when Status >= 200, Status < 300 ->
             {ok, json_body(Ref)};
@@ -94,6 +93,11 @@ send(Client, #req{method = Method, opts = Opts, body = Body} = Req) ->
         {error, Reason} ->
             {error, Reason}
     end.
+
+encode_body(Body) when is_binary(Body) ->
+    Body;
+encode_body(Body) when is_list(Body) ->
+    erlastic_lib:to_json(Body).
 
 parse_opt(_, [], Req) -> Req;
 
