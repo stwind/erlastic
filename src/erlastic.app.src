@@ -1,0 +1,17 @@
+%% -*- mode: erlang -*-
+%% ex: ft=erlang ts=2 sw=2 et
+{application, erlastic,
+ [
+  {description, "Elasticsearc Client"},
+  {vsn, git},
+  {registered, []},
+  {applications, 
+   [
+    kernel,
+    stdlib,
+    hackney,
+    jiffy
+   ]},
+  {mod, { erlastic_app, []}},
+  {env, []}
+ ]}.
