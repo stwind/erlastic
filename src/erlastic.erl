@@ -88,8 +88,8 @@ send(Client, #req{method = Method, opts = Opts, body = Body} = Req) ->
             {error, raw_body(Ref)};
         {ok, 404, _, Ref} ->
             {error, {not_found, json_body(Ref)}};
-        {ok, 500, _, Ref} ->
-            {error, {internal_error, json_body(Ref)}};
+        {ok, Status, _, Ref} ->
+            {error, {internal_error, Status, json_body(Ref)}};
         {error, Reason} ->
             {error, Reason}
     end.
