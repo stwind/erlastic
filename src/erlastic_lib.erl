@@ -34,6 +34,8 @@ make_io([], Acc, false) ->
     {lists:reverse(Acc)};
 make_io([], Acc, true)->
     lists:reverse(Acc);
+make_io([{Key, {}} | Rest], Acc, _Type) ->
+    make_io(Rest, [{Key, {[]}} | Acc], false);
 make_io([{Key, Value} | Rest], Acc, _Type) when is_list(Value) ->
     make_io(Rest, [{Key, make_io(Value,[], true)} | Acc], false);
 make_io([{Key, Value} | Rest], Acc, _Type) when ?PRIMITIVE(Value) ->

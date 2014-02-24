@@ -9,6 +9,8 @@
 -export([delete_doc/5]).
 -export([update_doc/5]).
 -export([update_doc/6]).
+-export([search/4]).
+-export([search/5]).
 
 -type vals() :: list({binary(), binary()}).
 
@@ -55,6 +57,14 @@ update_doc(Client, Index, Type, Id, Body, Opts) ->
     Req = #req{path = path({Index, Type, Id},<<"/_update">>), body = Body,
                method = post, opts = Opts}, 
     send(Client, parse_opt(update_doc, Opts, Req)).
+
+search(Client, Index, Type, Body) ->
+    search(Client, Index, Type, Body, []).
+
+search(Client, Index, Type, Body, Opts) ->
+    Req = #req{path = path({Index, Type},<<"/_search">>), body = Body,
+               method = get, opts = Opts}, 
+    send(Client, parse_opt(search, Opts, Req)).
 
 %% ===================================================================
 %% Private
