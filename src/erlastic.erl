@@ -10,7 +10,9 @@
 -export([update_doc/5]).
 -export([update_doc/6]).
 -export([search/4]).
--export([search/5]).
+-export([mget_doc/2]).
+-export([mget_doc/3]).
+-export([mget_doc/5]).
 
 -type vals() :: list({binary(), binary()}).
 
@@ -66,6 +68,18 @@ search(Client, Index, Type, Body, Opts) ->
                method = get, opts = Opts}, 
     send(Client, parse_opt(search, Opts, Req)).
 
+mget_doc(Client, Body) ->
+    mget_doc(Client, Body, []).
+
+mget_doc(Client, Body, Opts) ->
+    Req = #req{path = <<"/_mget">>, method = get, body = Body, opts = Opts}, 
+    send(Client, parse_opt(search, Opts, Req)).
+
+mget_doc(Client, Index, Type, Body, Opts) ->
+    Req = #req{path = path({Index, Type},<<"/_mget">>), method = get, 
+               body = Body, opts = Opts}, 
+    send(Client, parse_opt(search, Opts, Req)).
+
 %% ===================================================================
 %% Private
 %% ===================================================================
@@ -79,6 +93,8 @@ url(Client, #req{path = Path, qs = KVs}) ->
     iolist_to_binary([prefix(Client), Path, 
                       [<<"?">> || KVs /= []], hackney_url:qs(KVs)]).
 
+path({Index}) ->
+    <<"/",Index/binary>>;
 path({Index, Type}) ->
     <<"/",Index/binary,"/",Type/binary>>;
 path({Index, Type, Id}) ->
