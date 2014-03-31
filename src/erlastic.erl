@@ -10,6 +10,7 @@
 -export([update_doc/5]).
 -export([update_doc/6]).
 -export([search/4]).
+-export([search/5]).
 -export([mget_doc/2]).
 -export([mget_doc/3]).
 -export([mget_doc/5]).
