@@ -3,6 +3,7 @@
 -export([new/3]).
 -export([index_doc/4]).
 -export([index_doc/5]).
+-export([bulk/5]).
 -export([get_doc/4]).
 -export([get_doc/5]).
 -export([delete_doc/4]).
@@ -38,6 +39,11 @@ index_doc(Client, Index, Type, Doc) ->
 index_doc(Client, Index, Type, Doc, Opts) ->
     Req = #req{path = path({Index, Type}), method = post, body = Doc, opts = Opts}, 
     send(Client, parse_opt(index_doc, Opts, Req)).
+
+bulk(Client, Index, Type, Actions, Opts) ->
+    Req = #req{path = path({Index, Type},<<"/_bulk">>), method = post, 
+               body = Actions, opts = Opts}, 
+    send(Client, parse_opt(bulk, Opts, Req)).
 
 get_doc(Client, Index, Type, Id) ->
     get_doc(Client, Index, Type, Id, []).
